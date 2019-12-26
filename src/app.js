@@ -60,7 +60,7 @@ App = {
     render: async() => {
 
         // Render Account
-        $('.test').html(App.account);
+        $('.test').html(`Your Account:${App.account}`);
 
 
 
@@ -71,7 +71,7 @@ App = {
         }).then(function(balance) {
             //       console.log(balance);
             //     console.log(instance);
-            $('.showBalance').html(balance.toNumber());
+            $('.showBalance').html(`<h3>Your Balance : ${balance.toNumber()}</h3> `);
         })
 
     },
@@ -93,12 +93,12 @@ App = {
 
         App.contracts.Dbank.deployed().then(function(_instance) {
             instance = _instance;
-            //return instance.deposit().send({ value: amt });
-            web3.eth.sendTransaction({ from: App.address, to: instance.account, value: web3.toWei(amt, "ether") }, (err) => {
-                if (!err) fun();
-            });
+            return instance.deposit(amt, { from: App.account, value: web3.toWei(amt, "ether") });
+            // web3.eth.sendTransaction({ from: App.address, to: instance.account, value: web3.toWei(amt, "ether") }, (err) => {
+            //     if (!err) fun();
+            // });
 
-        });
+        }).then(() => location.reload());
 
 
     },
@@ -115,8 +115,11 @@ App = {
         App.contracts.Dbank.deployed().then(function(_instance) {
             instance = _instance;
 
-            return instance.withDraw(amt);
-        }).then((e) => console.log(e))
+            return instance.withDraw(amt, { from: App.account });
+        }).then((e) => {
+            location.reload();
+            console.log(e);
+        })
 
     }
 }

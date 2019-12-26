@@ -33,7 +33,7 @@ contract Dbank{
 
         require(amount<=Balance[msg.sender]);
         Balance[msg.sender]-=amount;
-        msg.sender.transfer(amount);
+        msg.sender.transfer(amount*convertor);
     
         return(Balance[msg.sender]);
 	}
